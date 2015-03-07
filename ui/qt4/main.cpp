@@ -1,7 +1,8 @@
 // --------------------------------------------------------------------------
-// File : main.cpp
-// Author: ◆e5bW6vDOJ.
-// --------------------------------------------------------------------------
+// File: main.cpp
+// Copyright (C) 2006-2008 ◆e5bW6vDOJ.
+// Copyright (C) 2015 nel
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or
@@ -11,14 +12,13 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 // --------------------------------------------------------------------------
-
 #include <stdio.h>
+#include <QApplication>
 
 #ifdef _APPLE
 #include <Carbon/Carbon.h>
-#endif
-
-#include <qapplication.h>
+#include <QPlastiqueStyle>
+#endif //_APPLE
 
 #include "peercast.h"
 #include "servmgr.h"
@@ -27,13 +27,13 @@
 
 #ifdef WIN32
 #include "win32/wsys.h"
-#else //WIN32
+#else
 #include "unix/usys.h"
 #endif //WIN32
 
 #include "main.h"
 #include "gui.h"
-#include "listitem.h"
+#include "listwidget.h"
 
 bool g_bChangeSettings = false;
 std::queue<QString> g_qLog;
@@ -190,8 +190,6 @@ OSErr AEHandleRApp(const AppleEvent *event, AppleEvent *reply, long refcon)
 }
 #endif
 
-#include <qplastiquestyle.h>
-
 int main(int argc, char **argv)
 {
     int ret;
@@ -268,3 +266,4 @@ int main(int argc, char **argv)
 
     return ret;
 }
+

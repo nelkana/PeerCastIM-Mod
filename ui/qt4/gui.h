@@ -1,7 +1,8 @@
 // --------------------------------------------------------------------------
-// File : gui.h
-// Author: ◆e5bW6vDOJ.
-// --------------------------------------------------------------------------
+// File: gui.h
+// Copyright (C) 2006-2008 ◆e5bW6vDOJ.
+// Copyright (C) 2015 nel
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or
@@ -11,7 +12,6 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 // --------------------------------------------------------------------------
-
 #ifndef GUIH
 #define GUIH
 
@@ -19,19 +19,18 @@
 
 #include "servmgr.h"
 
-#include <qwidget.h>
-#include <qlabel.h>
-#include <qpushbutton.h>
-#include <qlineedit.h>
-#include <qframe.h>
-#include <qtimer.h>
-#include <qicon.h>
-#include <qmenu.h>
-#include <qevent.h>
-#include <Qt/q3listbox.h>
+#include <QWidget>
+#include <QLabel>
+#include <QPushButton>
+#include <QLineEdit>
+#include <QFrame>
+#include <QTimer>
+#include <QIcon>
+#include <QMenu>
+#include <QEvent>
 #ifndef _APPLE
-#include <qsystemtrayicon.h>
-#endif
+#include <QSystemTrayIcon>
+#endif // _APPLE
 
 class QMainForm : public QWidget, private Ui::MainFormBase
 {
@@ -83,9 +82,6 @@ public slots:
     virtual void pushButtonChannel_toggled(bool state);
     virtual void pushButtonClear_clicked();
 
-    virtual void listBoxChannel_mouseButtonClicked(int button, Q3ListBoxItem *item, const QPoint &pos);
-    virtual void listBoxConnection_mouseButtonClicked(int button, Q3ListBoxItem *item, const QPoint &pos);
-
 #ifndef _APPLE
     virtual void tray_activated(QSystemTrayIcon::ActivationReason reason);
     virtual void tray_messageClicked();
@@ -99,4 +95,5 @@ protected:
     virtual void closeEvent(QCloseEvent *event);
 };
 
-#endif
+#endif // GUIH
+
