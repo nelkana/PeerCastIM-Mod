@@ -17,11 +17,12 @@
 
 #include <queue>
 
-typedef struct {
+typedef struct
+{
     int type;
     QString name;
     QString msg;
-} tNotifyInfo;
+}tNotifyInfo;
 
 extern bool g_bChangeSettings;
 extern std::queue<QString> g_qLog;

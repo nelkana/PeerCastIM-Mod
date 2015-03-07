@@ -20,41 +20,44 @@
 #include <qpainter.h>
 #include <Qt/q3listbox.h>
 
-#define _RGB(r, g, b) ((unsigned int)r<<16 | (unsigned int)g<<8 | (unsigned int)b)
+#define _RGB(r,g,b) ((unsigned int)r<<16 | (unsigned int)g<<8 | (unsigned int)b)
 
-typedef struct {
+typedef struct
+{
     bool available;
     bool relay;
     bool firewalled;
     int relays;
     int vp_ver;
     int totalRelays, totalListeners;
-} tServentInfo;
+}tServentInfo;
 
-int selectedItem(Q3ListBox * lb);
-
+int selectedItem(Q3ListBox *lb);
 unsigned int get_relay_color(tServentInfo &info);
 
-class LogListBoxItem : public Q3ListBoxItem {
+class LogListBoxItem : public Q3ListBoxItem
+{
 public:
     QString out;
     int line_height, line_width;
 
     LogListBoxItem(QString str, Q3ListBox *lb);
-
 protected:
     virtual void paint(QPainter *p);
 
-    virtual int height(const Q3ListBox *lb) const {
+    virtual int height(const Q3ListBox *lb) const
+    {
         return line_height;
     }
 
-    virtual int width(const Q3ListBox *lb) const {
+    virtual int width(const Q3ListBox *lb) const
+    {
         return line_width;
     }
 };
 
-class ChannelListBoxItem : public Q3ListBoxItem {
+class ChannelListBoxItem : public Q3ListBoxItem
+{
 public:
     int offset;
     QString name, status;
@@ -68,16 +71,19 @@ public:
 protected:
     virtual void paint(QPainter *p);
 
-    virtual int height(const Q3ListBox *lb) const {
+    virtual int height(const Q3ListBox *lb) const
+    {
         return line_height;
     }
 
-    virtual int width(const Q3ListBox *lb) const {
+    virtual int width(const Q3ListBox *lb) const
+    {
         return line_width;
     }
 };
 
-class ConnectionListBoxItem : public Q3ListBoxItem {
+class ConnectionListBoxItem : public Q3ListBoxItem
+{
 public:
     int offset;
     QString out;
@@ -91,11 +97,13 @@ public:
 protected:
     virtual void paint(QPainter *p);
 
-    virtual int height(const Q3ListBox *lb) const {
+    virtual int height(const Q3ListBox *lb) const
+    {
         return line_height;
     }
 
-    virtual int width(const Q3ListBox *lb) const {
+    virtual int width(const Q3ListBox *lb) const
+    {
         return line_width;
     }
 };

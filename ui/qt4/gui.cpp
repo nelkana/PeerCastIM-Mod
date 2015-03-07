@@ -21,7 +21,8 @@
 #include "gui.h"
 #include "listitem.h"
 
-QMainForm::QMainForm(QWidget * parent) : QWidget(parent) {
+QMainForm::QMainForm(QWidget *parent) : QWidget(parent)
+{
     setupUi(this);
 
     listBoxConnection->setHScrollBarMode(Q3ListBox::AlwaysOff);
@@ -64,12 +65,8 @@ QMainForm::QMainForm(QWidget * parent) : QWidget(parent) {
     connect(pushButtonKeep, SIGNAL(clicked()), this, SLOT(pushButtonKeep_clicked()));
     connect(pushButtonPlay, SIGNAL(clicked()), this, SLOT(pushButtonPlay_clicked()));
     connect(pushButtonDisconnectConn, SIGNAL(clicked()), this, SLOT(pushButtonDisconnectConn_clicked()));
-    connect(listBoxChannel, SIGNAL(mouseButtonClicked(int, Q3ListBoxItem * ,
-    const QPoint &)), this, SLOT(listBoxChannel_mouseButtonClicked(int, Q3ListBoxItem * ,
-    const QPoint &)));
-    connect(listBoxConnection, SIGNAL(mouseButtonClicked(int, Q3ListBoxItem * ,
-    const QPoint &)), this, SLOT(listBoxConnection_mouseButtonClicked(int, Q3ListBoxItem * ,
-    const QPoint &)));
+    connect(listBoxChannel, SIGNAL(mouseButtonClicked(int, Q3ListBoxItem *, const QPoint &)), this, SLOT(listBoxChannel_mouseButtonClicked(int, Q3ListBoxItem *, const QPoint &)));
+    connect(listBoxConnection, SIGNAL(mouseButtonClicked(int, Q3ListBoxItem *, const QPoint &)), this, SLOT(listBoxConnection_mouseButtonClicked(int, Q3ListBoxItem *, const QPoint &)));
 
     actionExit = new QAction(this);
     connect(actionExit, SIGNAL(triggered()), qApp, SLOT(quit()));
@@ -114,7 +111,8 @@ QMainForm::QMainForm(QWidget * parent) : QWidget(parent) {
     languageChange();
 }
 
-QMainForm::~QMainForm() {
+QMainForm::~QMainForm()
+{
     {
         QSettings ini(iniFileName, QSettings::IniFormat);
 
@@ -123,7 +121,8 @@ QMainForm::~QMainForm() {
     }
 }
 
-void QMainForm::languageChange() {
+void QMainForm::languageChange()
+{
 #ifndef _APPLE
     tray->setToolTip(tr("PeerCast"));
     trayMenuPopup->setTitle(tr("Popup message"));
@@ -137,19 +136,20 @@ void QMainForm::languageChange() {
     actionShow->setText(tr("Show GUI"));
 }
 
-void QMainForm::reloadGui() {
+void QMainForm::reloadGui()
+{
     char sztemp[256];
 
-    sprintf(sztemp, "%d", (int) servMgr->serverHost.port);
+    sprintf(sztemp, "%d", (int)servMgr->serverHost.port);
     lineEditPort->setText(sztemp);
     lineEditPassword->setText(servMgr->password);
-    sprintf(sztemp, "%d", (int) servMgr->maxRelays);
+    sprintf(sztemp, "%d", (int)servMgr->maxRelays);
     lineEditMaxRelays->setText(sztemp);
 
-    pushButtonDebug->setOn(servMgr->showLog & (1 << LogBuffer::T_DEBUG));
-    pushButtonError->setOn(servMgr->showLog & (1 << LogBuffer::T_ERROR));
-    pushButtonNetwork->setOn(servMgr->showLog & (1 << LogBuffer::T_NETWORK));
-    pushButtonChannel->setOn(servMgr->showLog & (1 << LogBuffer::T_CHANNEL));
+    pushButtonDebug->setOn(servMgr->showLog&(1<<LogBuffer::T_DEBUG));
+    pushButtonError->setOn(servMgr->showLog&(1<<LogBuffer::T_ERROR));
+    pushButtonNetwork->setOn(servMgr->showLog&(1<<LogBuffer::T_NETWORK));
+    pushButtonChannel->setOn(servMgr->showLog&(1<<LogBuffer::T_CHANNEL));
     pushButtonStop->setOn(servMgr->pauseLog);
 
     int mask = peercastInst->getNotifyMask();
@@ -164,39 +164,44 @@ void QMainForm::reloadGui() {
 
 void QMainForm::timerLogUpdate_timeout()    // 100ms
 {
-    if (remainPopup < 0) {
-        if (!g_qNotify.empty()) {
+    if(remainPopup < 0)
+    {
+        if(!g_qNotify.empty())
+        {
             tNotifyInfo info = g_qNotify.front();
             g_qNotify.pop();
 #ifndef _APPLE
-            tray->showMessage(info.name, info.msg, QSystemTrayIcon::NoIcon, NOTIFY_TIMEOUT * 1000);
+            tray->showMessage(info.name, info.msg, QSystemTrayIcon::NoIcon, NOTIFY_TIMEOUT*1000);
 #endif
-            remainPopup = NOTIFY_TIMEOUT * 10;
+            remainPopup = NOTIFY_TIMEOUT*10;
         }
     }
-    else {
+    else
+    {
         remainPopup--;
     }
 
-    while (!g_qLog.empty()) {
+    while(!g_qLog.empty())
+    {
         QString str = g_qLog.front();
         g_qLog.pop();
 
         LogListBoxItem *item = new LogListBoxItem(str, listBoxLog);
         listBoxLog->insertItem(item);
-        listBoxLog->setBottomItem(listBoxLog->count() - 1);
+        listBoxLog->setBottomItem(listBoxLog->count()-1);
 
-        if (listBoxLog->count() > MAX_LOG_NUM)
+        if(listBoxLog->count() > MAX_LOG_NUM)
             listBoxLog->removeItem(0);
     }
 
-    if (g_bChangeSettings) {
+    if(g_bChangeSettings)
+    {
         g_bChangeSettings = false;
         reloadGui();
     }
 }
 
-void QMainForm::timerUpdate_timeout()    // 1000ms
+void QMainForm::timerUpdate_timeout()   // 1000ms
 {
     GnuID sel_id;
 
@@ -213,8 +218,9 @@ void QMainForm::timerUpdate_timeout()    // 1000ms
         chanMgr->lock.on();
 
         c = chanMgr->channel;
-        while (c) {
-            if (n == count)
+        while(c)
+        {
+            if(n == count)
                 sel_id = c->info.id;
 
             ChannelListBoxItem *item = new ChannelListBoxItem(c, listBoxChannel);
@@ -241,15 +247,18 @@ void QMainForm::timerUpdate_timeout()    // 1000ms
         servMgr->lock.on();
 
         s = servMgr->servents;
-        while (s) {
+        while(s)
+        {
             tServentInfo info;
 
-            if (s->type == Servent::T_NONE) {
+            if(s->type == Servent::T_NONE)
+            {
                 s = s->next;
                 continue;
             }
 
-            if (sel_id.isSet() && !sel_id.isSame(s->chanID)) {
+            if(sel_id.isSet() && !sel_id.isSame(s->chanID))
+            {
                 s = s->next;
                 continue;
             }
@@ -265,11 +274,15 @@ void QMainForm::timerUpdate_timeout()    // 1000ms
                 chanMgr->hitlistlock.on();
 
                 chl = chanMgr->findHitListByID(s->chanID);
-                if (chl) {
+                if(chl)
+                {
                     ChanHit *hit = chl->hit;
-                    while (hit) {
-                        if (hit->servent_id == s->servent_id) {
-                            if ((hit->numHops == 1) && (hit->host.ip == s->getHost().ip)) {
+                    while(hit)
+                    {
+                        if(hit->servent_id == s->servent_id)
+                        {
+                            if((hit->numHops == 1) && (hit->host.ip == s->getHost().ip))
+                            {
                                 info.available = true;
                                 info.relay = hit->relay;
                                 info.firewalled = hit->firewalled;
@@ -301,17 +314,20 @@ void QMainForm::timerUpdate_timeout()    // 1000ms
     }
 }
 
-void QMainForm::pushButtonBump_clicked() {
+void QMainForm::pushButtonBump_clicked()
+{
     int n;
     ChannelListBoxItem *item;
 
     n = selectedItem(listBoxChannel);
-    item = (ChannelListBoxItem *) listBoxChannel->item(n);
-    if (item) {
+    item = (ChannelListBoxItem *)listBoxChannel->item(n);
+    if(item)
+    {
         chanMgr->lock.on();
 
         Channel *c = chanMgr->findChannelByID(item->id);
-        if (c) {
+        if(c)
+        {
             c->bump = true;
         }
 
@@ -319,17 +335,20 @@ void QMainForm::pushButtonBump_clicked() {
     }
 }
 
-void QMainForm::pushButtonDisconnect_clicked() {
+void QMainForm::pushButtonDisconnect_clicked()
+{
     int n;
     ChannelListBoxItem *item;
 
     n = selectedItem(listBoxChannel);
-    item = (ChannelListBoxItem *) listBoxChannel->item(n);
-    if (item) {
+    item = (ChannelListBoxItem *)listBoxChannel->item(n);
+    if(item)
+    {
         chanMgr->lock.on();
 
         Channel *c = chanMgr->findChannelByID(item->id);
-        if (c) {
+        if(c)
+        {
             c->thread.active = false;
             c->thread.finish = true;
         }
@@ -338,17 +357,20 @@ void QMainForm::pushButtonDisconnect_clicked() {
     }
 }
 
-void QMainForm::pushButtonKeep_clicked() {
+void QMainForm::pushButtonKeep_clicked()
+{
     int n;
     ChannelListBoxItem *item;
 
     n = selectedItem(listBoxChannel);
-    item = (ChannelListBoxItem *) listBoxChannel->item(n);
-    if (item) {
+    item = (ChannelListBoxItem *)listBoxChannel->item(n);
+    if(item)
+    {
         chanMgr->lock.on();
 
         Channel *c = chanMgr->findChannelByID(item->id);
-        if (c) {
+        if(c)
+        {
             c->stayConnected = !c->stayConnected;
         }
 
@@ -356,17 +378,20 @@ void QMainForm::pushButtonKeep_clicked() {
     }
 }
 
-void QMainForm::pushButtonPlay_clicked() {
+void QMainForm::pushButtonPlay_clicked()
+{
     int n;
     ChannelListBoxItem *item;
 
     n = selectedItem(listBoxChannel);
-    item = (ChannelListBoxItem *) listBoxChannel->item(n);
-    if (item) {
+    item = (ChannelListBoxItem *)listBoxChannel->item(n);
+    if(item)
+    {
         chanMgr->lock.on();
 
         Channel *c = chanMgr->findChannelByID(item->id);
-        if (c) {
+        if(c)
+        {
             chanMgr->playChannel(c->info);
         }
 
@@ -374,17 +399,20 @@ void QMainForm::pushButtonPlay_clicked() {
     }
 }
 
-void QMainForm::pushButtonDisconnectConn_clicked() {
+void QMainForm::pushButtonDisconnectConn_clicked()
+{
     int n;
     ConnectionListBoxItem *item;
 
     n = selectedItem(listBoxConnection);
-    item = (ConnectionListBoxItem *) listBoxConnection->item(n);
-    if (item) {
+    item = (ConnectionListBoxItem *)listBoxConnection->item(n);
+    if(item)
+    {
         servMgr->lock.on();
 
         Servent *s = servMgr->findServentByServentID(item->servent_id);
-        if (s) {
+        if(s)
+        {
             s->thread.active = false;
         }
 
@@ -392,13 +420,16 @@ void QMainForm::pushButtonDisconnectConn_clicked() {
     }
 }
 
-void QMainForm::pushButtonEnabled_toggled(bool state) {
+void QMainForm::pushButtonEnabled_toggled(bool state)
+{
     lineEditPort->setEnabled(state == 0);
     lineEditPassword->setEnabled(state == 0);
     lineEditMaxRelays->setEnabled(state == 0);
 
-    if (state != 0) {
-        if (!servMgr->autoServe) {
+    if(state != 0)
+    {
+        if(!servMgr->autoServe)
+        {
             QString str;
             unsigned short temp;
             bool success = false;
@@ -408,12 +439,12 @@ void QMainForm::pushButtonEnabled_toggled(bool state) {
 
             str = lineEditPort->text();
             temp = str.toUShort(&success);
-            if (success)
+            if(success)
                 servMgr->serverHost.port = temp;
 
             str = lineEditMaxRelays->text();
             temp = str.toUShort(&success);
-            if (success)
+            if(success)
                 servMgr->setMaxRelays(temp);
 
             servMgr->autoServe = true;
@@ -421,114 +452,135 @@ void QMainForm::pushButtonEnabled_toggled(bool state) {
             peercastInst->saveSettings();
         }
     }
-    else {
+    else
+    {
         servMgr->autoServe = false;
     }
 }
 
-void QMainForm::pushButtonStop_toggled(bool state) {
+void QMainForm::pushButtonStop_toggled(bool state)
+{
     servMgr->pauseLog = state != 0;
 }
 
-void QMainForm::pushButtonDebug_toggled(bool state) {
-    servMgr->showLog = state != 0 ? servMgr->showLog | (1 << LogBuffer::T_DEBUG) : servMgr->showLog & ~(1 << LogBuffer::T_DEBUG);
+void QMainForm::pushButtonDebug_toggled(bool state)
+{
+    servMgr->showLog = state != 0 ? servMgr->showLog|(1<<LogBuffer::T_DEBUG) : servMgr->showLog&~(1<<LogBuffer::T_DEBUG);
 }
 
-void QMainForm::pushButtonError_toggled(bool state) {
-    servMgr->showLog = state != 0 ? servMgr->showLog | (1 << LogBuffer::T_ERROR) : servMgr->showLog & ~(1 << LogBuffer::T_ERROR);
+void QMainForm::pushButtonError_toggled(bool state)
+{
+    servMgr->showLog = state != 0 ? servMgr->showLog|(1<<LogBuffer::T_ERROR) : servMgr->showLog&~(1<<LogBuffer::T_ERROR);
 }
 
-void QMainForm::pushButtonNetwork_toggled(bool state) {
-    servMgr->showLog = state != 0 ? servMgr->showLog | (1 << LogBuffer::T_NETWORK) : servMgr->showLog & ~(1 << LogBuffer::T_NETWORK);
+void QMainForm::pushButtonNetwork_toggled(bool state)
+{
+    servMgr->showLog = state != 0 ? servMgr->showLog|(1<<LogBuffer::T_NETWORK) : servMgr->showLog&~(1<<LogBuffer::T_NETWORK);
 }
 
-void QMainForm::pushButtonChannel_toggled(bool state) {
-    servMgr->showLog = state != 0 ? servMgr->showLog | (1 << LogBuffer::T_CHANNEL) : servMgr->showLog & ~(1 << LogBuffer::T_CHANNEL);
+void QMainForm::pushButtonChannel_toggled(bool state)
+{
+    servMgr->showLog = state != 0 ? servMgr->showLog|(1<<LogBuffer::T_CHANNEL) : servMgr->showLog&~(1<<LogBuffer::T_CHANNEL);
 }
 
-void QMainForm::pushButtonClear_clicked() {
+void QMainForm::pushButtonClear_clicked()
+{
     listBoxLog->clear();
     sys->logBuf->clear();
 }
 
 #ifndef _APPLE
 
-void QMainForm::tray_activated(QSystemTrayIcon::ActivationReason reason) {
-    switch (reason) {
-        case QSystemTrayIcon::DoubleClick:
-            show();
-            break;
+void QMainForm::tray_activated(QSystemTrayIcon::ActivationReason reason)
+{
+    switch(reason)
+    {
+    case QSystemTrayIcon::DoubleClick:
+        show();
+        break;
 
-        case QSystemTrayIcon::Trigger:
-            break;
+    case QSystemTrayIcon::Trigger:
+        break;
 
-//	case QSystemTrayIcon::MiddleClick:
-//	case QSystemTrayIcon::Unknown:
-//	case QSystemTrayIcon::Context:
+//  case QSystemTrayIcon::MiddleClick:
+//  case QSystemTrayIcon::Unknown:
+//  case QSystemTrayIcon::Context:
     }
 }
 
-void QMainForm::tray_messageClicked() {
+void QMainForm::tray_messageClicked()
+{
     remainPopup = 0;
 }
 
 #endif
 
-void QMainForm::setNotifyMask(ServMgr::NOTIFY_TYPE nt) {
+void QMainForm::setNotifyMask(ServMgr::NOTIFY_TYPE nt)
+{
     int mask = peercastInst->getNotifyMask();
     mask ^= nt;
     peercastInst->setNotifyMask(mask);
     peercastInst->saveSettings();
 }
 
-void QMainForm::actionTracker_triggered(bool checked) {
+void QMainForm::actionTracker_triggered(bool checked)
+{
     setNotifyMask(ServMgr::NT_BROADCASTERS);
 }
 
-void QMainForm::actionTrack_triggered(bool checked) {
+void QMainForm::actionTrack_triggered(bool checked)
+{
     setNotifyMask(ServMgr::NT_TRACKINFO);
 }
 
-void QMainForm::actionMsgPeerCast_triggered(bool checked) {
+void QMainForm::actionMsgPeerCast_triggered(bool checked)
+{
     setNotifyMask(ServMgr::NT_PEERCAST);
 }
 
-void QMainForm::listBoxChannel_mouseButtonClicked(int button, Q3ListBoxItem *item, const QPoint &pos) {
-    if (item) {
-        if (button == 2) {
-            ChannelListBoxItem *li = (ChannelListBoxItem *) item;
+void QMainForm::listBoxChannel_mouseButtonClicked(int button, Q3ListBoxItem *item, const QPoint &pos)
+{
+    if(item)
+    {
+        if(button == 2)
+        {
+            ChannelListBoxItem *li = (ChannelListBoxItem *)item;
 
             chanMgr->lock.on();
 
             Channel *c = chanMgr->findChannelByID(li->id);
-            if (c) {
+            if(c)
+            {
                 QString str;
                 QMenu *menu = new QMenu();
 
                 menu->addAction(QString::fromUtf8(c->info.name.data));
 
                 str = QString::fromUtf8(c->info.genre.data);
-                if (!c->info.genre.isEmpty() && !c->info.genre.isEmpty())
+                if(!c->info.genre.isEmpty() && !c->info.genre.isEmpty())
                     str += " - ";
                 str += QString::fromUtf8(c->info.desc.data);
-                if (str != "") {
+                if(str != "")
+                {
                     str = "[" + str + "]";
                     menu->addAction(str);
                 }
 
                 str = QString::fromUtf8(c->info.track.artist.data);
-                if (!c->info.track.artist.isEmpty() && !c->info.track.title.isEmpty())
+                if(!c->info.track.artist.isEmpty() && !c->info.track.title.isEmpty())
                     str += " - ";
                 str += QString::fromUtf8(c->info.track.title.data);
-                if (str != "") {
+                if(str != "")
+                {
                     str = "Playing: " + str;
                     menu->addAction(str);
                 }
 
-                if (!c->info.comment.isEmpty()) {
+                if(!c->info.comment.isEmpty())
+                {
                     str = "\"";
                     str += QString::fromUtf8(c->info.comment.data);
-                    str += "\"";
+                    str +="\"";
                     menu->addAction(str);
                 }
 
@@ -537,32 +589,38 @@ void QMainForm::listBoxChannel_mouseButtonClicked(int button, Q3ListBoxItem *ite
                 menu->addSeparator();
                 menu->addAction("Deselect");
 
-                if (menu->exec(pos))
+                if(menu->exec(pos))
                     listBoxChannel->clearSelection();
 
                 delete menu;
             }
-            else {
+            else
+            {
                 chanMgr->lock.off();
             }
         }
     }
-    else {
+    else
+    {
         listBoxChannel->clearSelection();
     }
 
     timerUpdate_timeout();
 }
 
-void QMainForm::listBoxConnection_mouseButtonClicked(int button, Q3ListBoxItem *item, const QPoint &pos) {
-    if (item) {
+void QMainForm::listBoxConnection_mouseButtonClicked(int button, Q3ListBoxItem *item, const QPoint &pos)
+{
+    if(item)
+    {
     }
-    else {
+    else
+    {
         listBoxConnection->clearSelection();
     }
 }
 
-void QMainForm::closeEvent(QCloseEvent * event) {
+void QMainForm::closeEvent(QCloseEvent *event)
+{
     hide();
     event->ignore();
 }
