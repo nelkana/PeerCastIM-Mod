@@ -9,6 +9,13 @@ unix {
  LIBS +=
  DEFINES += _UNIX
  SOURCES += ../../core/unix/usys.cpp ../../core/unix/usocket.cpp
+ SOURCES += ../../core/unix/compat.cpp
+}
+unix:!macx { # Ubuntu or Debian or etc...
+ QMAKE_CXXFLAGS += -D OS_LINUX
+}
+unix:macx {
+ QMAKE_CXXFLAGS += -D OS_MACOSX
 }
 
 win32 {
