@@ -21,12 +21,16 @@ unix:macx {
 win32 {
  LIBS += -lwsock32
  DEFINES += WIN32 QT
+ DEFINES -= UNICODE
+ CONFIG(debug, debug|release) {
+     CONFIG += console
+ }
  SOURCES += ../../core/win32/wsys.cpp ../../core/win32/wsocket.cpp
 }
 
 macx {
  LIBS +=
- DEFINES += _APPLE
+ DEFINES +=
  ICON = peercast.icns
  TARGET = PeerCast
  CONFIG += x86 ppc sdk
@@ -47,7 +51,11 @@ SOURCES += \
     listwidget.cpp \
     main.cpp
 
-FORMS = mainform.ui
+FORMS += \
+    mainwindow.ui
+
+RESOURCES += \
+    peercast.qrc
 
 SOURCES += \
     ../../core/common/socket.cpp \
