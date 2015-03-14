@@ -145,7 +145,7 @@ bool MainWindow::isHideGuiOnLaunch()
 void MainWindow::languageChange()
 {
 #ifndef Q_OS_MAC
-    this->tray->setToolTip(tr("PeerCast"));
+    this->tray->setToolTip(tr("PeerCastIM-Mod"));
     this->trayMenuPopup->setTitle(tr("Popup message"));
     this->trayMenuConfig->setTitle(tr("Config"));
 #endif // Q_OS_MAC
