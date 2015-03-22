@@ -3,8 +3,6 @@ PeerCastIM-Mod
 
 PeerCastIMをベースにPeerCast Qtを移植しました.
 
-ただしQt GUIを利用できるわけではなくCLIのみサポートします.
-
 ## ビルド
 
 ### Linux
@@ -46,7 +44,7 @@ make
 ln -s ../html ./html
 ```
 
-### Qt5 ⚠未完成
+### Qt5
 
 Qt5のbinディレクトリのパスを通し
 
